@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="no-referrer" />
     <title>❤️宝宝专属空间❤️</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧸</text></svg>">    <style>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧸</text></svg>">
+    <style>
         /* 基础样式重置 */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
@@ -151,7 +152,7 @@
     </header>
 
     <main class="gallery" id="gallery">
-        </main>
+    </main>
 
     <div class="modal" id="imageModal">
         <span class="close-btn" id="closeModal">&times;</span>
@@ -160,11 +161,11 @@
 
 <script>
     // ==========================================
-    // 1. Gitee 图床配置区 (已修复 repo 参数)
+    // 1. Gitee 图床配置区
     // ==========================================
     const GITEE_CONFIG = {
         owner: 'hx_a',   
-        repo: 'baby-album',  // <--- 修复了这里：只需要填仓库名即可
+        repo: 'baby-album',  
         path: 'img',                
         token: '54b57d61c8bbd89012c5702a0123e177'  
     };
@@ -192,9 +193,8 @@
             }
 
             const files = await response.json();
-            gallery.innerHTML = ''; // 清空加载提示
+            gallery.innerHTML = ''; 
             
-            // 过滤出图片文件并渲染
             const imageFiles = files.filter(file => file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i));
             
             if (imageFiles.length === 0) {
@@ -202,7 +202,6 @@
                 return;
             }
 
-            // 倒序排列，让最新的图片显示在前面
             imageFiles.reverse().forEach(file => renderImageToGallery(file.download_url));
 
         } catch (error) {
@@ -212,32 +211,26 @@
     }
 
     // ==========================================
-    // 3. 上传新图片到 Gitee
-    // ==========================================
-    // ==========================================
-    // 3. 上传新图片到 Gitee (已升级为支持多图批量上传)
+    // 3. 上传新图片到 Gitee (支持多图批量上传)
     // ==========================================
     fileInput.addEventListener('change', async function(e) {
-        const files = e.target.files; // 获取所有选中的文件
+        const files = e.target.files; 
         if (files.length === 0) return;
 
         const originalText = uploadBtn.innerText;
-        uploadBtn.style.pointerEvents = 'none'; // 禁用按钮防止重复点击
+        uploadBtn.style.pointerEvents = 'none'; 
 
         let successCount = 0;
         let failCount = 0;
 
-        // 用一个循环，把图片排队一张张上传
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             
-            // 实时更新按钮文字，显示上传进度
             uploadBtn.innerText = `正在飞往 Gitee... (${i + 1}/${files.length})`;
 
             try {
                 const base64Content = await getBase64(file);
                 const ext = file.name.substring(file.name.lastIndexOf("."));
-                // 加一个 i 保证即使同一毫秒生成的文件名也绝对不重复
                 const newFileName = new Date().getTime() + "_" + i + "_" + Math.floor(Math.random() * 1000) + ext;
                 
                 const uploadUrl = `https://gitee.com/api/v5/repos/${GITEE_CONFIG.owner}/${GITEE_CONFIG.repo}/contents/${GITEE_CONFIG.path}/${newFileName}`;
@@ -265,59 +258,16 @@
                 console.error(`文件 ${file.name} 上传出错:`, error);
                 failCount++;
             }
-        } // 循环结束
+        } 
 
-        // 恢复按钮状态
         uploadBtn.innerText = originalText;
         uploadBtn.style.pointerEvents = 'auto';
-        e.target.value = ''; // 清空 input
+        e.target.value = ''; 
 
-        // 给出最终的批量上传结果提示
         if (failCount === 0) {
             alert(`太棒了！${successCount} 张照片全部成功飞抵宝宝的专属空间！`);
         } else {
             alert(`上传完成：成功 ${successCount} 张，失败 ${failCount} 张。请检查网络或控制台。`);
-        }
-    });
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const originalText = uploadBtn.innerText;
-        uploadBtn.innerText = '正在飞往 Gitee...';
-        uploadBtn.style.pointerEvents = 'none'; 
-
-        try {
-            const base64Content = await getBase64(file);
-            const ext = file.name.substring(file.name.lastIndexOf("."));
-            const newFileName = new Date().getTime() + "_" + Math.floor(Math.random() * 1000) + ext;
-            
-            const uploadUrl = `https://gitee.com/api/v5/repos/${GITEE_CONFIG.owner}/${GITEE_CONFIG.repo}/contents/${GITEE_CONFIG.path}/${newFileName}`;
-            
-            const response = await fetch(uploadUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    access_token: GITEE_CONFIG.token,
-                    content: base64Content,
-                    message: `Upload baby photo: ${newFileName}` 
-                })
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                renderImageToGallery(result.content.download_url, true);
-                alert('上传成功！宝宝的新照片已保存到 Gitee。');
-            } else {
-                alert(`上传失败: ${result.message}`);
-            }
-        } catch (error) {
-            console.error('上传出错:', error);
-            alert('网络请求失败，请检查网络或控制台报错。');
-        } finally {
-            uploadBtn.innerText = originalText;
-            uploadBtn.style.pointerEvents = 'auto';
-            e.target.value = ''; 
         }
     });
 
@@ -351,10 +301,8 @@
         });
     }
 
-    // 页面启动时加载
     window.onload = loadImagesFromGitee;
 
-    // 放大镜逻辑
     const modal = document.getElementById('imageModal');
     const modalImg = document.getElementById('modalImage');
     const closeModal = document.getElementById('closeModal');
