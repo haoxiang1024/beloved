@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宝宝专属空间</title>
+    <style>
+        /* 基础样式重置 */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif; 
+            /* 换了一个更温馨的浅暖色背景 */
+            background-color: #fdfbf7; 
+            color: #333; 
+        }
+
+        /* 顶部导航与上传区域 - 添加了毛玻璃效果 */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        h1 { 
+            font-size: 24px; 
+            font-weight: 600; 
+            color: #554c49; /* 更柔和的字体颜色 */
+        }
+        
+        /* 漂亮的上传按钮 - 改为更可爱的马卡龙色系 */
+        .upload-btn-wrapper { position: relative; overflow: hidden; display: inline-block; }
+        .btn {
+            border: none;
+            color: white;
+            background-color: #ff8fa3; /* 温馨的粉色 */
+            padding: 10px 24px;
+            border-radius: 20px; /* 圆角更大，显得可爱 */
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 143, 163, 0.3);
+        }
+        .btn:hover { 
+            background-color: #ff708a; 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 143, 163, 0.4);
+        }
+        .upload-btn-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            height: 100%;
+        }
+
+        /* 优美的图片网格展示区 - 改用瀑布流布局，完美兼容横竖屏 */
+        .gallery {
+            column-count: 3; /* 默认3列 */
+            column-gap: 20px;
+            padding: 30px 5%;
+        }
+        .gallery-item {
+            break-inside: avoid; /* 防止图片跨列断开 */
+            margin-bottom: 20px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer; /* 提示可点击 */
+        }
+        .gallery-item:hover { 
+            transform: translateY(-6px); 
+            box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+        }
+        .gallery-item img {
+            width: 100%;
+            height: auto; /* 保持原图宽高比，不裁剪 */
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.03); /* 鼠标悬浮时图片轻微放大 */
+        }
+
+        /* 响应式设计：屏幕变小的时候减少列数 */
+        @media (max-width: 900px) { .gallery { column-count: 2; } }
+        @media (max-width: 600px) { .gallery { column-count: 1; } }
+
+        /* 全屏放大查看的模态框 (Lightbox) */
+        .modal {
+            display: flex;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal img {
+            max-width: 90%;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+            object-fit: contain; /* 确保放大后图片完整显示 */
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 弹出动画 */
+        }
+        .modal.show img {
+            transform: scale(1);
+        }
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .close-btn:hover { color: #ff8fa3; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🧸 宝宝专属空间</h1>
+        <div class="upload-btn-wrapper">
+            <button class="btn">上传新照片</button>
+            <input type="file" id="fileUpload" accept="image/*" />
+        </div>
+    </header>
+
+    <main class="gallery" id="gallery">
+        <div class="gallery-item">
+            <img src="./img/1.jpg" alt="宝宝照片">
+        </div>
+        <div class="gallery-item">
+            <img src="./img/2.jpg" alt="宝宝照片">
+        </div>
+        <div class="gallery-item">
+            <img src="./img/3.jpg" alt="宝宝照片">
+        </div>
+    </main>
+
+    <div class="modal" id="imageModal">
+        <span class="close-btn" id="closeModal">&times;</span>
+        <img id="modalImage" src="" alt="放大预览">
+    </div>
+
+<script>
+    // ==========================================
+    // 1. Gitee 图床配置区 (请替换为你自己的信息)
+    // ==========================================
+    const GITEE_CONFIG = {
+        owner: 'hx_a',   // 注意：是个人主页URL里的那个英文名，不是中文昵称
+        repo: 'https://gitee.com/hx_a/baby-album',         // 例如: baby-album
+        path: 'img',                // 你想存放在仓库的哪个目录下
+        token: '54b57d61c8bbd89012c5702a0123e177'  // 极其重要：请妥善保管，切勿公开发布此网页！
+    };
+
+    const gallery = document.getElementById('gallery');
+    const fileInput = document.getElementById('fileUpload');
+    const uploadBtn = document.querySelector('.btn');
+
+    // ==========================================
+    // 2. 页面加载时：从 Gitee 拉取已有图片
+    // ==========================================
+    async function loadImagesFromGitee() {
+        gallery.innerHTML = '<p style="text-align:center; width:100%; color:#888;">正在加载宝宝相册...</p>';
+        const url = `https://gitee.com/api/v5/repos/${GITEE_CONFIG.owner}/${GITEE_CONFIG.repo}/contents/${GITEE_CONFIG.path}?access_token=${GITEE_CONFIG.token}`;
+        
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                // 如果目录不存在（首次使用），Gitee 会返回 404，属于正常现象
+                if (response.status === 404) {
+                    gallery.innerHTML = '<p style="text-align:center; width:100%; color:#888;">图床空空如也，快上传第一张照片吧！</p>';
+                } else {
+                    throw new Error('获取图片列表失败');
+                }
+                return;
+            }
+
+            const files = await response.json();
+            gallery.innerHTML = ''; // 清空加载提示
+            
+            // 过滤出图片文件并渲染
+            const imageFiles = files.filter(file => file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i));
+            
+            if (imageFiles.length === 0) {
+                gallery.innerHTML = '<p style="text-align:center; width:100%; color:#888;">图床里还没有图片哦~</p>';
+                return;
+            }
+
+            // 倒序排列，让最新的图片显示在前面 (假设文件名包含时间戳)
+            imageFiles.reverse().forEach(file => renderImageToGallery(file.download_url));
+
+        } catch (error) {
+            console.error(error);
+            gallery.innerHTML = '<p style="text-align:center; width:100%; color:red;">加载失败，请检查 Gitee 配置是否正确。</p>';
+        }
+    }
+
+    // ==========================================
+    // 3. 上传新图片到 Gitee
+    // ==========================================
+    fileInput.addEventListener('change', async function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // 按钮状态：上传中
+        const originalText = uploadBtn.innerText;
+        uploadBtn.innerText = '正在飞往 Gitee...';
+        uploadBtn.style.pointerEvents = 'none'; // 禁用按钮防止重复点击
+
+        try {
+            // 将文件转换为 Base64 (Gitee API 的要求)
+            const base64Content = await getBase64(file);
+            
+            // 生成唯一文件名 (时间戳 + 随机数 + 原后缀)
+            const ext = file.name.substring(file.name.lastIndexOf("."));
+            const newFileName = new Date().getTime() + "_" + Math.floor(Math.random() * 1000) + ext;
+            
+            // Gitee 新建文件 API
+            const uploadUrl = `https://gitee.com/api/v5/repos/${GITEE_CONFIG.owner}/${GITEE_CONFIG.repo}/contents/${GITEE_CONFIG.path}/${newFileName}`;
+            
+            const response = await fetch(uploadUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    access_token: GITEE_CONFIG.token,
+                    content: base64Content,
+                    message: `Upload baby photo: ${newFileName}` // 提交信息
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                // 上传成功，立即在前端渲染展示（使用返回的 download_url）
+                renderImageToGallery(result.content.download_url, true);
+                alert('上传成功！宝宝的新照片已保存到 Gitee。');
+            } else {
+                alert(`上传失败: ${result.message}`);
+            }
+        } catch (error) {
+            console.error('上传出错:', error);
+            alert('网络请求失败，请检查网络或控制台报错。');
+        } finally {
+            // 恢复按钮状态
+            uploadBtn.innerText = originalText;
+            uploadBtn.style.pointerEvents = 'auto';
+            e.target.value = ''; // 清空 input
+        }
+    });
+
+    // ==========================================
+    // 辅助函数区
+    // ==========================================
+    
+    // 将图片渲染到页面 (isNew 表示是否是新上传的，新上传的放前面)
+    function renderImageToGallery(imgUrl, isNew = false) {
+        const newDiv = document.createElement('div');
+        newDiv.className = 'gallery-item';
+        const newImg = document.createElement('img');
+        newImg.src = imgUrl;
+        newImg.alt = "宝宝照片";
+        newDiv.appendChild(newImg);
+        
+        if (isNew) {
+            gallery.prepend(newDiv);
+        } else {
+            gallery.appendChild(newDiv);
+        }
+    }
+
+    // 将 File 对象转换为 Base64 字符串 (去除头部)
+    function getBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                // reader.result 格式为 "data:image/jpeg;base64,/9j/4AAQSkZJ..."
+                // Gitee 只需要逗号后面的纯 base64 数据
+                const base64String = reader.result.split(',')[1];
+                resolve(base64String);
+            };
+            reader.onerror = error => reject(error);
+        });
+    }
+
+    // 页面启动时，执行拉取图片
+    window.onload = loadImagesFromGitee;
+
+    // 保持你原有的放大镜 (Lightbox) 逻辑不变...
+    // (此处省略放大镜点击逻辑，保留你之前的代码即可)
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const closeModal = document.getElementById('closeModal');
+
+    gallery.addEventListener('click', function(e) {
+        if (e.target.tagName === 'IMG') {
+            modalImg.src = e.target.src;
+            modal.classList.add('show');
+        }
+    });
+
+    modal.addEventListener('click', function(e) {
+        if (e.target !== modalImg) {
+            modal.classList.remove('show');
+        }
+    });
+</script>
+
+</body>
+</html>
