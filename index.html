@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer" />
     <title>宝宝专属空间</title>
     <style>
         /* 基础样式重置 */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
             font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif; 
-            /* 换了一个更温馨的浅暖色背景 */
             background-color: #fdfbf7; 
             color: #333; 
         }
 
-        /* 顶部导航与上传区域 - 添加了毛玻璃效果 */
+        /* 顶部导航与上传区域 */
         header {
             display: flex;
             justify-content: space-between;
@@ -30,17 +30,17 @@
         h1 { 
             font-size: 24px; 
             font-weight: 600; 
-            color: #554c49; /* 更柔和的字体颜色 */
+            color: #554c49; 
         }
         
-        /* 漂亮的上传按钮 - 改为更可爱的马卡龙色系 */
+        /* 上传按钮 */
         .upload-btn-wrapper { position: relative; overflow: hidden; display: inline-block; }
         .btn {
             border: none;
             color: white;
-            background-color: #ff8fa3; /* 温馨的粉色 */
+            background-color: #ff8fa3; 
             padding: 10px 24px;
-            border-radius: 20px; /* 圆角更大，显得可爱 */
+            border-radius: 20px; 
             font-size: 15px;
             font-weight: bold;
             cursor: pointer;
@@ -62,20 +62,20 @@
             height: 100%;
         }
 
-        /* 优美的图片网格展示区 - 改用瀑布流布局，完美兼容横竖屏 */
+        /* 瀑布流布局 */
         .gallery {
-            column-count: 3; /* 默认3列 */
+            column-count: 3; 
             column-gap: 20px;
             padding: 30px 5%;
         }
         .gallery-item {
-            break-inside: avoid; /* 防止图片跨列断开 */
+            break-inside: avoid; 
             margin-bottom: 20px;
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 6px 15px rgba(0,0,0,0.06);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer; /* 提示可点击 */
+            cursor: pointer; 
         }
         .gallery-item:hover { 
             transform: translateY(-6px); 
@@ -83,19 +83,19 @@
         }
         .gallery-item img {
             width: 100%;
-            height: auto; /* 保持原图宽高比，不裁剪 */
+            height: auto; 
             display: block;
             transition: transform 0.5s ease;
         }
         .gallery-item:hover img {
-            transform: scale(1.03); /* 鼠标悬浮时图片轻微放大 */
+            transform: scale(1.03); 
         }
 
-        /* 响应式设计：屏幕变小的时候减少列数 */
+        /* 响应式设计 */
         @media (max-width: 900px) { .gallery { column-count: 2; } }
         @media (max-width: 600px) { .gallery { column-count: 1; } }
 
-        /* 全屏放大查看的模态框 (Lightbox) */
+        /* 放大查看模态框 */
         .modal {
             display: flex;
             position: fixed;
@@ -120,9 +120,9 @@
             max-height: 90vh;
             border-radius: 8px;
             box-shadow: 0 5px 25px rgba(0,0,0,0.5);
-            object-fit: contain; /* 确保放大后图片完整显示 */
+            object-fit: contain; 
             transform: scale(0.8);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 弹出动画 */
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         }
         .modal.show img {
             transform: scale(1);
@@ -151,16 +151,7 @@
     </header>
 
     <main class="gallery" id="gallery">
-        <div class="gallery-item">
-            <img src="./img/1.jpg" alt="宝宝照片">
-        </div>
-        <div class="gallery-item">
-            <img src="./img/2.jpg" alt="宝宝照片">
-        </div>
-        <div class="gallery-item">
-            <img src="./img/3.jpg" alt="宝宝照片">
-        </div>
-    </main>
+        </main>
 
     <div class="modal" id="imageModal">
         <span class="close-btn" id="closeModal">&times;</span>
@@ -169,13 +160,13 @@
 
 <script>
     // ==========================================
-    // 1. Gitee 图床配置区 (请替换为你自己的信息)
+    // 1. Gitee 图床配置区 (已修复 repo 参数)
     // ==========================================
     const GITEE_CONFIG = {
-        owner: 'hx_a',   // 注意：是个人主页URL里的那个英文名，不是中文昵称
-        repo: 'https://gitee.com/hx_a/baby-album',         // 例如: baby-album
-        path: 'img',                // 你想存放在仓库的哪个目录下
-        token: '54b57d61c8bbd89012c5702a0123e177'  // 极其重要：请妥善保管，切勿公开发布此网页！
+        owner: 'hx_a',   
+        repo: 'baby-album',  // <--- 修复了这里：只需要填仓库名即可
+        path: 'img',                
+        token: '54b57d61c8bbd89012c5702a0123e177'  
     };
 
     const gallery = document.getElementById('gallery');
@@ -192,7 +183,6 @@
         try {
             const response = await fetch(url);
             if (!response.ok) {
-                // 如果目录不存在（首次使用），Gitee 会返回 404，属于正常现象
                 if (response.status === 404) {
                     gallery.innerHTML = '<p style="text-align:center; width:100%; color:#888;">图床空空如也，快上传第一张照片吧！</p>';
                 } else {
@@ -212,7 +202,7 @@
                 return;
             }
 
-            // 倒序排列，让最新的图片显示在前面 (假设文件名包含时间戳)
+            // 倒序排列，让最新的图片显示在前面
             imageFiles.reverse().forEach(file => renderImageToGallery(file.download_url));
 
         } catch (error) {
@@ -228,20 +218,15 @@
         const file = e.target.files[0];
         if (!file) return;
 
-        // 按钮状态：上传中
         const originalText = uploadBtn.innerText;
         uploadBtn.innerText = '正在飞往 Gitee...';
-        uploadBtn.style.pointerEvents = 'none'; // 禁用按钮防止重复点击
+        uploadBtn.style.pointerEvents = 'none'; 
 
         try {
-            // 将文件转换为 Base64 (Gitee API 的要求)
             const base64Content = await getBase64(file);
-            
-            // 生成唯一文件名 (时间戳 + 随机数 + 原后缀)
             const ext = file.name.substring(file.name.lastIndexOf("."));
             const newFileName = new Date().getTime() + "_" + Math.floor(Math.random() * 1000) + ext;
             
-            // Gitee 新建文件 API
             const uploadUrl = `https://gitee.com/api/v5/repos/${GITEE_CONFIG.owner}/${GITEE_CONFIG.repo}/contents/${GITEE_CONFIG.path}/${newFileName}`;
             
             const response = await fetch(uploadUrl, {
@@ -250,14 +235,13 @@
                 body: JSON.stringify({
                     access_token: GITEE_CONFIG.token,
                     content: base64Content,
-                    message: `Upload baby photo: ${newFileName}` // 提交信息
+                    message: `Upload baby photo: ${newFileName}` 
                 })
             });
 
             const result = await response.json();
 
             if (response.ok) {
-                // 上传成功，立即在前端渲染展示（使用返回的 download_url）
                 renderImageToGallery(result.content.download_url, true);
                 alert('上传成功！宝宝的新照片已保存到 Gitee。');
             } else {
@@ -267,18 +251,15 @@
             console.error('上传出错:', error);
             alert('网络请求失败，请检查网络或控制台报错。');
         } finally {
-            // 恢复按钮状态
             uploadBtn.innerText = originalText;
             uploadBtn.style.pointerEvents = 'auto';
-            e.target.value = ''; // 清空 input
+            e.target.value = ''; 
         }
     });
 
     // ==========================================
     // 辅助函数区
     // ==========================================
-    
-    // 将图片渲染到页面 (isNew 表示是否是新上传的，新上传的放前面)
     function renderImageToGallery(imgUrl, isNew = false) {
         const newDiv = document.createElement('div');
         newDiv.className = 'gallery-item';
@@ -294,14 +275,11 @@
         }
     }
 
-    // 将 File 对象转换为 Base64 字符串 (去除头部)
     function getBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = () => {
-                // reader.result 格式为 "data:image/jpeg;base64,/9j/4AAQSkZJ..."
-                // Gitee 只需要逗号后面的纯 base64 数据
                 const base64String = reader.result.split(',')[1];
                 resolve(base64String);
             };
@@ -309,11 +287,10 @@
         });
     }
 
-    // 页面启动时，执行拉取图片
+    // 页面启动时加载
     window.onload = loadImagesFromGitee;
 
-    // 保持你原有的放大镜 (Lightbox) 逻辑不变...
-    // (此处省略放大镜点击逻辑，保留你之前的代码即可)
+    // 放大镜逻辑
     const modal = document.getElementById('imageModal');
     const modalImg = document.getElementById('modalImage');
     const closeModal = document.getElementById('closeModal');
