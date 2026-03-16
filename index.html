@@ -46,141 +46,57 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 10px rgba(255, 143, 163, 0.3);
         }
-        .btn:hover { 
-            background-color: #ff708a; 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(255, 143, 163, 0.4);
-        }
+        .btn:hover { background-color: #ff708a; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(255, 143, 163, 0.4); }
         .upload-btn-wrapper input[type=file] {
-            font-size: 100px;
-            position: absolute;
-            left: 0; top: 0; opacity: 0; cursor: pointer; height: 100%;
+            font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; height: 100%;
         }
 
-        /* ================= 日期分组标题样式 ================= */
-        .date-title {
-            font-size: 18px;
-            color: #ff8fa3;
-            margin: 30px 5% 15px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-        }
-        .date-title::before {
-            content: '🌸';
-            margin-right: 8px;
-            font-size: 16px;
-        }
+        /* 日期分组标题样式 */
+        .date-title { font-size: 18px; color: #ff8fa3; margin: 30px 5% 15px; font-weight: bold; display: flex; align-items: center; }
+        .date-title::before { content: '🌸'; margin-right: 8px; font-size: 16px; }
         .date-section { margin-bottom: 20px; }
 
-        /* 瀑布流布局 (移入分组内) */
-        .gallery {
-            column-count: 3; 
-            column-gap: 20px;
-            padding: 0 5%;
-        }
+        /* 瀑布流布局 */
+        .gallery { column-count: 3; column-gap: 20px; padding: 0 5%; }
         .gallery-item {
-            break-inside: avoid; 
-            margin-bottom: 20px;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.06);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer; 
+            break-inside: avoid; margin-bottom: 20px; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.06); transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; 
         }
-        .gallery-item:hover { 
-            transform: translateY(-6px); 
-            box-shadow: 0 12px 25px rgba(0,0,0,0.12);
-        }
-        .gallery-item img {
-            width: 100%; height: auto; display: block;
-            transition: transform 0.5s ease;
-        }
+        .gallery-item:hover { transform: translateY(-6px); box-shadow: 0 12px 25px rgba(0,0,0,0.12); }
+        .gallery-item img { width: 100%; height: auto; display: block; transition: transform 0.5s ease; background-color: #f0eae1; min-height: 100px; }
         .gallery-item:hover img { transform: scale(1.03); }
 
-        /* ================= 升级后的放大查看模态框 ================= */
+        /* 放大查看模态框 */
         .modal {
-            display: flex; position: fixed; z-index: 999;
-            left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.95);
-            align-items: center; justify-content: center;
-            opacity: 0; visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            user-select: none;
+            display: flex; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.95); align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; user-select: none;
         }
         .modal.show { opacity: 1; visibility: visible; }
-        
-        .modal-content-wrapper {
-            position: relative; width: 100%; height: 100%;
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden; 
-        }
-
-        .modal img {
-            max-width: 95%; max-height: 85vh;
-            border-radius: 8px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
-            object-fit: contain; 
-            transform: scale(0.8);
-            transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
-        }
+        .modal-content-wrapper { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .modal img { max-width: 95%; max-height: 85vh; border-radius: 8px; box-shadow: 0 5px 25px rgba(0,0,0,0.5); object-fit: contain; transform: scale(0.8); transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
         .modal.show img { transform: scale(1); }
-
-        /* 关闭按钮 */
-        .close-btn {
-            position: absolute; top: 20px; right: 25px;
-            color: rgba(255,255,255,0.8); font-size: 35px; font-weight: bold;
-            cursor: pointer; transition: color 0.3s; z-index: 1001;
-            padding: 10px; 
-        }
+        .close-btn { position: absolute; top: 20px; right: 25px; color: rgba(255,255,255,0.8); font-size: 35px; font-weight: bold; cursor: pointer; transition: color 0.3s; z-index: 1001; padding: 10px; }
         .close-btn:hover { color: #ff8fa3; }
-
-        /* 左右导航箭头 */
-        .nav-btn {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            color: rgba(255,255,255,0.6); font-size: 50px;
-            cursor: pointer; transition: 0.3s;
-            padding: 20px; z-index: 1000;
-        }
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.6); font-size: 50px; cursor: pointer; transition: 0.3s; padding: 20px; z-index: 1000; }
         .nav-btn:hover { color: #ff8fa3; background: rgba(0,0,0,0.3); border-radius: 10px; }
-        .nav-prev { left: 20px; }
-        .nav-next { right: 20px; }
+        .nav-prev { left: 20px; } .nav-next { right: 20px; }
 
         /* 底部工具栏 */
-        .modal-toolbar {
-            position: absolute; bottom: 30px; left: 50%;
-            transform: translateX(-50%);
-            display: flex; align-items: center; gap: 20px;
-            background: rgba(40, 40, 40, 0.85);
-            padding: 12px 25px; border-radius: 30px;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            color: white; font-size: 15px; z-index: 1001;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            white-space: nowrap;
-        }
+        .modal-toolbar { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 20px; background: rgba(40, 40, 40, 0.85); padding: 12px 25px; border-radius: 30px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: white; font-size: 15px; z-index: 1001; box-shadow: 0 4px 15px rgba(0,0,0,0.4); white-space: nowrap; }
         .toolbar-item { cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 6px; padding: 5px; }
         .toolbar-item:hover { color: #ff8fa3; }
         .toolbar-divider { width: 1px; height: 16px; background: rgba(255,255,255,0.3); }
         .img-counter { font-weight: bold; letter-spacing: 1px; }
-        
-        /* 加减号特殊排版，保持居中对齐 */
         .sym-icon { font-size: 18px; font-weight: bold; display: inline-block; width: 18px; text-align: center; }
 
-        /* ================= 响应式设计 (重点适配手机端) ================= */
+        /* 响应式设计 */
         @media (max-width: 900px) { .gallery { column-count: 2; } }
         @media (max-width: 600px) { 
-            .gallery { column-count: 1; padding: 0 5%; }
-            header { padding: 12px 5%; }
-            h1 { font-size: 18px; }
-            .btn { padding: 8px 18px; font-size: 14px; }
-            .date-title { font-size: 16px; margin: 20px 5% 10px; }
-            .nav-btn { display: none; }
-            .modal-toolbar { gap: 15px; padding: 10px 20px; bottom: 20px; width: max-content;}
-            .tb-text { display: none; } 
-            .toolbar-item { font-size: 20px; } 
-            .sym-icon { font-size: 22px; width: 22px; } 
-            .img-counter { font-size: 14px; }
+            .gallery { column-count: 1; padding: 0 5%; } header { padding: 12px 5%; } h1 { font-size: 18px; } .btn { padding: 8px 18px; font-size: 14px; }
+            .date-title { font-size: 16px; margin: 20px 5% 10px; } .nav-btn { display: none; }
+            .modal-toolbar { gap: 15px; padding: 10px 20px; bottom: 20px; width: max-content;} .tb-text { display: none; } 
+            .toolbar-item { font-size: 20px; } .sym-icon { font-size: 22px; width: 22px; } .img-counter { font-size: 14px; }
         }
     </style>
 </head>
@@ -189,7 +105,7 @@
     <header>
         <h1>🧸 老婆专属空间</h1>
         <div class="upload-btn-wrapper">
-            <button class="btn">上传新照片</button>
+            <button class="btn" id="uploadBtn">上传新照片</button>
             <input type="file" id="fileUpload" accept="image/*" multiple />
         </div>
     </header>
@@ -199,11 +115,7 @@
     <div class="modal" id="imageModal">
         <span class="close-btn" id="closeModal">&times;</span>
         <div class="nav-btn nav-prev" id="prevBtn">&#10094;</div>
-        
-        <div class="modal-content-wrapper" id="modalWrapper">
-            <img id="modalImage" src="" alt="放大预览">
-        </div>
-
+        <div class="modal-content-wrapper" id="modalWrapper"><img id="modalImage" src="" alt="放大预览"></div>
         <div class="nav-btn nav-next" id="nextBtn">&#10095;</div>
         
         <div class="modal-toolbar">
@@ -217,9 +129,6 @@
     </div>
 
 <script>
-    // ==========================================
-    // 1. Gitee 图床配置区
-    // ==========================================
     const GITEE_CONFIG = {
         owner: 'hx_a',   
         repo: 'baby-album',  
@@ -229,133 +138,96 @@
 
     const mainContainer = document.getElementById('mainContainer');
     const fileInput = document.getElementById('fileUpload');
-    const uploadBtn = document.querySelector('.btn');
+    const uploadBtn = document.getElementById('uploadBtn');
 
-    // ==========================================
-    // 时间处理辅助函数
-    // ==========================================
     function formatDateStr(timestamp) {
         const d = new Date(parseInt(timestamp));
-        if (isNaN(d.getTime())) return '早期回忆'; // 不是通过本系统上传的旧照片
-
+        if (isNaN(d.getTime())) return '早期回忆'; 
         const today = new Date();
-        const yesterday = new Date(today);
-        yesterday.setDate(yesterday.getDate() - 1);
-
+        const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
         if (d.toDateString() === today.toDateString()) return '今天 🌟';
         if (d.toDateString() === yesterday.toDateString()) return '昨天';
-
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        return `${year}年${month}月${day}日`;
+        return `${d.getFullYear()}年${String(d.getMonth() + 1).padStart(2, '0')}月${String(d.getDate()).padStart(2, '0')}日`;
     }
 
     // ==========================================
-    // 2. 加载与渲染 (支持日期分组)
+    // 渲染优化：一次性拼装 HTML，拒绝卡顿
     // ==========================================
     async function loadImagesFromGitee() {
-        mainContainer.innerHTML = '<p style="text-align:center; width:100%; color:#888; padding-top:40px;">正在整理宝宝的相册...</p>';
+        mainContainer.innerHTML = '<p style="text-align:center; width:100%; color:#888; padding-top:40px;">正在加速整理宝宝相册 🚀...</p>';
         const url = `https://gitee.com/api/v5/repos/${GITEE_CONFIG.owner}/${GITEE_CONFIG.repo}/contents/${GITEE_CONFIG.path}?access_token=${GITEE_CONFIG.token}`;
         
         try {
             const response = await fetch(url);
             if (!response.ok) {
-                if (response.status === 404) mainContainer.innerHTML = '<p style="text-align:center; width:100%; color:#888; padding-top:40px;">空空如也，快上传第一张照片吧！</p>';
-                else throw new Error('获取图片列表失败');
+                mainContainer.innerHTML = response.status === 404 ? '<p style="text-align:center; color:#888; padding-top:40px;">空空如也，快上传第一张照片吧！</p>' : '<p style="text-align:center; color:red;">获取列表失败</p>';
                 return;
             }
             const files = await response.json();
             const imageFiles = files.filter(file => file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i));
-            
             if (imageFiles.length === 0) {
-                mainContainer.innerHTML = '<p style="text-align:center; width:100%; color:#888; padding-top:40px;">图床里还没有图片哦~</p>';
-                return;
+                mainContainer.innerHTML = '<p style="text-align:center; color:#888; padding-top:40px;">图床里还没有图片哦~</p>'; return;
             }
 
-            mainContainer.innerHTML = ''; // 清空提示
-
-            // 提取时间戳并排序 (倒序，最新在前)
+            // 1. 数据处理与分组
             imageFiles.forEach(file => {
-                const match = file.name.match(/^(\d{13})_/); // 解析文件名开头的13位时间戳
+                const match = file.name.match(/^(\d{13})_/);
                 file.timestamp = match ? parseInt(match[1]) : 0;
             });
             imageFiles.sort((a, b) => b.timestamp - a.timestamp);
 
-            // 逐个渲染，智能分配到对应日期组
-            imageFiles.forEach(file => renderImageToGallery(file.download_url, file.name));
+            const groups = {};
+            imageFiles.forEach(file => {
+                const dateStr = formatDateStr(file.timestamp);
+                if (!groups[dateStr]) groups[dateStr] = [];
+                groups[dateStr].push(file);
+            });
+
+            // 2. 批量拼接 HTML 字符串 (最高效的渲染方式)
+            let htmlContent = '';
+            let globalImageIndex = 0; // 记录总图片序号用于取消前几张的懒加载
+
+            for (const dateStr in groups) {
+                htmlContent += `<section class="date-section" data-group="${dateStr}">
+                                    <h2 class="date-title">${dateStr}</h2>
+                                    <div class="gallery">`;
+                groups[dateStr].forEach(file => {
+                    // 前6张图片极速加载，后面的图片懒加载省流量
+                    const lazyAttr = globalImageIndex < 6 ? '' : 'loading="lazy"';
+                    htmlContent += `<div class="gallery-item"><img src="${file.download_url}" ${lazyAttr} alt="宝宝照片"></div>`;
+                    globalImageIndex++;
+                });
+                htmlContent += `</div></section>`;
+            }
+            
+            // 3. 一次性推入页面，丝滑无感
+            mainContainer.innerHTML = htmlContent;
 
         } catch (error) {
-            console.error(error);
-            mainContainer.innerHTML = '<p style="text-align:center; width:100%; color:red; padding-top:40px;">加载失败，请检查配置。</p>';
-        }
-    }
-
-    // 将图片渲染到对应的日期分组中
-    function renderImageToGallery(imgUrl, fileName, isNew = false) {
-        const match = fileName.match(/^(\d{13})_/);
-        const dateStr = match ? formatDateStr(match[1]) : '早期回忆';
-        
-        // 查找是否已经有这个日期的区块
-        let section = document.querySelector(`section[data-group="${dateStr}"]`);
-        
-        // 如果没有，就创建一个新区块
-        if (!section) {
-            section = document.createElement('section');
-            section.className = 'date-section';
-            section.setAttribute('data-group', dateStr);
-            
-            const header = document.createElement('h2');
-            header.className = 'date-title';
-            header.innerText = dateStr;
-            section.appendChild(header);
-
-            const newGallery = document.createElement('div');
-            newGallery.className = 'gallery';
-            section.appendChild(newGallery);
-            
-            if (isNew) {
-                mainContainer.prepend(section); // 新上传的优先放在最上面
-            } else {
-                mainContainer.appendChild(section);
-            }
-        }
-        
-        // 插入图片
-        const gallery = section.querySelector('.gallery');
-        const newDiv = document.createElement('div');
-        newDiv.className = 'gallery-item';
-        const newImg = document.createElement('img');
-        newImg.src = imgUrl;
-        newImg.loading = "lazy"; 
-        newDiv.appendChild(newImg);
-        
-        if (isNew) {
-            gallery.prepend(newDiv);
-        } else {
-            gallery.appendChild(newDiv);
+            mainContainer.innerHTML = '<p style="text-align:center; color:red; padding-top:40px;">加载失败，请检查配置。</p>';
         }
     }
 
     // ==========================================
-    // 3. 上传功能
+    // 上传优化：并发上传处理 (类似多线程加速)
     // ==========================================
     fileInput.addEventListener('change', async function(e) {
-        const files = e.target.files; 
+        const files = Array.from(e.target.files); 
         if (files.length === 0) return;
 
         const originalText = uploadBtn.innerText;
         uploadBtn.style.pointerEvents = 'none'; 
         let successCount = 0, failCount = 0;
+        let completed = 0;
 
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            uploadBtn.innerText = `上传中... (${i + 1}/${files.length})`;
+        uploadBtn.innerText = `准备起飞... (0/${files.length})`;
 
+        // 将文件转为 Base64 并组装请求任务
+        const uploadTasks = files.map(async (file, index) => {
             try {
                 const base64Content = await getBase64(file);
                 const ext = file.name.substring(file.name.lastIndexOf("."));
-                const newFileName = new Date().getTime() + "_" + i + "_" + Math.floor(Math.random() * 1000) + ext;
+                const newFileName = new Date().getTime() + "_" + index + "_" + Math.floor(Math.random() * 1000) + ext;
                 const uploadUrl = `https://gitee.com/api/v5/repos/${GITEE_CONFIG.owner}/${GITEE_CONFIG.repo}/contents/${GITEE_CONFIG.path}/${newFileName}`;
                 
                 const response = await fetch(uploadUrl, {
@@ -368,18 +240,30 @@
                     })
                 });
 
-                const result = await response.json();
-                if (response.ok) {
-                    renderImageToGallery(result.content.download_url, newFileName, true);
-                    successCount++;
-                } else failCount++;
-            } catch (error) { failCount++; }
-        } 
+                if (response.ok) successCount++;
+                else failCount++;
+            } catch (error) {
+                failCount++;
+            } finally {
+                completed++;
+                uploadBtn.innerText = `极速上传中 (${completed}/${files.length})`;
+            }
+        });
+
+        // 并发执行所有上传任务！速度翻倍
+        await Promise.all(uploadTasks);
+
         uploadBtn.innerText = originalText;
         uploadBtn.style.pointerEvents = 'auto';
         e.target.value = ''; 
-        if (failCount === 0) alert(`太棒了！${successCount} 张照片上传成功！`);
-        else alert(`成功 ${successCount} 张，失败 ${failCount} 张。`);
+        
+        if (failCount === 0) {
+            alert(`太快了！${successCount} 张照片并发上传成功！`);
+            loadImagesFromGitee(); // 上传完直接刷新页面读取最新数据
+        } else {
+            alert(`上传完成：成功 ${successCount} 张，失败 ${failCount} 张。`);
+            loadImagesFromGitee();
+        }
     });
 
     function getBase64(file) {
@@ -394,20 +278,15 @@
     window.onload = loadImagesFromGitee;
 
     // ==========================================
-    // 4. 看图器逻辑 (适配多分组的情况)
+    // 4. 看图器逻辑 (保持不变)
     // ==========================================
     const modal = document.getElementById('imageModal');
     const modalImg = document.getElementById('modalImage');
     const modalWrapper = document.getElementById('modalWrapper');
-    
-    let currentImageArray = [];
-    let currentIndex = 0;
-    let currentZoom = 1;
+    let currentImageArray = [], currentIndex = 0, currentZoom = 1;
 
-    // 使用事件委托监听 mainContainer
     mainContainer.addEventListener('click', function(e) {
         if (e.target.tagName === 'IMG') {
-            // 获取页面里所有图片 (按DOM顺序提取，正好符合分组顺序)
             const imgs = Array.from(document.querySelectorAll('.gallery-item img'));
             currentImageArray = imgs.map(img => img.src);
             currentIndex = imgs.indexOf(e.target);
@@ -417,113 +296,52 @@
     });
 
     function updateModalView() {
-        currentZoom = 1;
-        modalImg.style.transform = `scale(${currentZoom})`;
+        currentZoom = 1; modalImg.style.transform = `scale(${currentZoom})`;
         modalImg.src = currentImageArray[currentIndex];
         document.getElementById('imgCounter').innerText = `${currentIndex + 1} / ${currentImageArray.length}`;
     }
 
-    function showPrev() {
-        if(currentImageArray.length === 0) return;
-        currentIndex = (currentIndex - 1 + currentImageArray.length) % currentImageArray.length;
-        updateModalView();
-    }
-    
-    function showNext() {
-        if(currentImageArray.length === 0) return;
-        currentIndex = (currentIndex + 1) % currentImageArray.length;
-        updateModalView();
-    }
+    function showPrev() { if(currentImageArray.length) { currentIndex = (currentIndex - 1 + currentImageArray.length) % currentImageArray.length; updateModalView(); } }
+    function showNext() { if(currentImageArray.length) { currentIndex = (currentIndex + 1) % currentImageArray.length; updateModalView(); } }
 
     document.getElementById('prevBtn').addEventListener('click', (e) => { e.stopPropagation(); showPrev(); });
     document.getElementById('nextBtn').addEventListener('click', (e) => { e.stopPropagation(); showNext(); });
-
-    function closeModalAction() {
-        modal.classList.remove('show');
-        setTimeout(() => { modalImg.src = ''; }, 300); 
-    }
-    
+    function closeModalAction() { modal.classList.remove('show'); setTimeout(() => { modalImg.src = ''; }, 300); }
     document.getElementById('closeModal').addEventListener('click', closeModalAction);
-    modalWrapper.addEventListener('click', function(e) {
-        if (e.target === modalWrapper) closeModalAction();
-    });
-
+    modalWrapper.addEventListener('click', function(e) { if (e.target === modalWrapper) closeModalAction(); });
     document.addEventListener('keydown', function(e) {
         if (!modal.classList.contains('show')) return;
-        if (e.key === 'ArrowLeft') showPrev();
-        if (e.key === 'ArrowRight') showNext();
-        if (e.key === 'Escape') closeModalAction();
+        if (e.key === 'ArrowLeft') showPrev(); if (e.key === 'ArrowRight') showNext(); if (e.key === 'Escape') closeModalAction();
     });
 
-    function applyZoom(newZoom) {
-        currentZoom = Math.min(Math.max(0.5, newZoom), 4);
-        modalImg.style.transform = `scale(${currentZoom})`;
-    }
+    function applyZoom(newZoom) { currentZoom = Math.min(Math.max(0.5, newZoom), 4); modalImg.style.transform = `scale(${currentZoom})`; }
     document.getElementById('zoomInBtn').addEventListener('click', (e) => { e.stopPropagation(); applyZoom(currentZoom + 0.3); });
     document.getElementById('zoomOutBtn').addEventListener('click', (e) => { e.stopPropagation(); applyZoom(currentZoom - 0.3); });
-    modalImg.addEventListener('wheel', e => {
-        e.preventDefault();
-        applyZoom(e.deltaY < 0 ? currentZoom + 0.1 : currentZoom - 0.1);
-    });
+    modalImg.addEventListener('wheel', e => { e.preventDefault(); applyZoom(e.deltaY < 0 ? currentZoom + 0.1 : currentZoom - 0.1); });
 
-    let touchStartX = 0;
-    let touchEndX = 0;
-    let lastTapTime = 0;
-
-    modalImg.addEventListener('touchstart', e => {
-        if (e.touches.length === 1) {
-            touchStartX = e.changedTouches[0].screenX;
-        }
-    });
-
+    let touchStartX = 0, touchEndX = 0, lastTapTime = 0;
+    modalImg.addEventListener('touchstart', e => { if (e.touches.length === 1) touchStartX = e.changedTouches[0].screenX; });
     modalImg.addEventListener('touchend', e => {
-        const currentTime = new Date().getTime();
-        const tapLength = currentTime - lastTapTime;
-        
-        if (tapLength > 0 && tapLength < 300) {
-            e.preventDefault();
-            if (currentZoom === 1) applyZoom(2); 
-            else applyZoom(1); 
-        } else {
-            if (currentZoom === 1 && e.changedTouches.length === 1) {
-                touchEndX = e.changedTouches[0].screenX;
-                handleSwipe();
-            }
-        }
+        const currentTime = new Date().getTime(); const tapLength = currentTime - lastTapTime;
+        if (tapLength > 0 && tapLength < 300) { e.preventDefault(); applyZoom(currentZoom === 1 ? 2 : 1); } 
+        else if (currentZoom === 1 && e.changedTouches.length === 1) { touchEndX = e.changedTouches[0].screenX; handleSwipe(); }
         lastTapTime = currentTime;
     });
-
-    function handleSwipe() {
-        const swipeThreshold = 40; 
-        if (touchEndX < touchStartX - swipeThreshold) showNext(); 
-        if (touchEndX > touchStartX + swipeThreshold) showPrev(); 
-    }
+    function handleSwipe() { const t = 40; if (touchEndX < touchStartX - t) showNext(); if (touchEndX > touchStartX + t) showPrev(); }
 
     document.getElementById('downloadBtn').addEventListener('click', async (e) => {
-        e.stopPropagation();
-        const url = currentImageArray[currentIndex];
+        e.stopPropagation(); const url = currentImageArray[currentIndex];
         const btnTextSpan = document.querySelector('#downloadBtn .tb-text');
         const originalText = btnTextSpan ? btnTextSpan.innerText : '';
         if(btnTextSpan) btnTextSpan.innerText = "打包中";
-        
         try {
-            const response = await fetch(url);
-            const blob = await response.blob();
-            const blobUrl = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = blobUrl;
-            a.download = url.substring(url.lastIndexOf('/') + 1) || 'baby_photo.jpg';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(blobUrl);
-        } catch (error) {
-            window.open(url, '_blank'); 
-        } finally {
-            if(btnTextSpan) btnTextSpan.innerText = originalText;
-        }
+            const response = await fetch(url); const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob); const a = document.createElement('a');
+            a.href = blobUrl; a.download = url.substring(url.lastIndexOf('/') + 1) || 'baby_photo.jpg';
+            document.body.appendChild(a); a.click(); document.body.removeChild(a); window.URL.revokeObjectURL(blobUrl);
+        } catch (error) { window.open(url, '_blank'); } 
+        finally { if(btnTextSpan) btnTextSpan.innerText = originalText; }
     });
-
 </script>
 </body>
 </html>
