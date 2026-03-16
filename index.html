@@ -147,6 +147,9 @@
         .toolbar-item:hover { color: #ff8fa3; }
         .toolbar-divider { width: 1px; height: 16px; background: rgba(255,255,255,0.3); }
         .img-counter { font-weight: bold; letter-spacing: 1px; }
+        
+        /* 加减号特殊排版，保持居中对齐 */
+        .sym-icon { font-size: 18px; font-weight: bold; display: inline-block; width: 18px; text-align: center; }
 
         /* ================= 响应式设计 (重点适配手机端) ================= */
         @media (max-width: 900px) { .gallery { column-count: 2; } }
@@ -163,6 +166,7 @@
             .modal-toolbar { gap: 15px; padding: 10px 20px; bottom: 20px; width: max-content;}
             .tb-text { display: none; } /* 隐藏文字说明 */
             .toolbar-item { font-size: 20px; } /* 调大图标尺寸 */
+            .sym-icon { font-size: 22px; width: 22px; } /* 手机端适度放大加减号 */
             .img-counter { font-size: 14px; }
         }
     </style>
@@ -192,8 +196,8 @@
         <div class="modal-toolbar">
             <span class="img-counter" id="imgCounter">1 / 1</span>
             <div class="toolbar-divider"></div>
-            <span class="toolbar-item" id="zoomInBtn">🔍 <span class="tb-text">放大</span></span>
-            <span class="toolbar-item" id="zoomOutBtn">🔎 <span class="tb-text">缩小</span></span>
+            <span class="toolbar-item" id="zoomInBtn"><span class="sym-icon">＋</span> <span class="tb-text">放大</span></span>
+            <span class="toolbar-item" id="zoomOutBtn"><span class="sym-icon">－</span> <span class="tb-text">缩小</span></span>
             <div class="toolbar-divider"></div>
             <span class="toolbar-item" id="downloadBtn">📥 <span class="tb-text">原图</span></span>
         </div>
@@ -215,7 +219,7 @@
     const uploadBtn = document.querySelector('.btn');
 
     // ==========================================
-    // 2. 加载与上传功能 (保持原样)
+    // 2. 加载与上传功能
     // ==========================================
     async function loadImagesFromGitee() {
         gallery.innerHTML = '<p style="text-align:center; width:100%; color:#888; padding-top:20px;">正在加载宝宝相册...</p>';
@@ -307,7 +311,7 @@
     window.onload = loadImagesFromGitee;
 
     // ==========================================
-    // 3. 看图器逻辑 (新增手机端手势、双击缩放)
+    // 3. 看图器逻辑
     // ==========================================
     const modal = document.getElementById('imageModal');
     const modalImg = document.getElementById('modalImage');
@@ -356,11 +360,9 @@
     
     document.getElementById('closeModal').addEventListener('click', closeModalAction);
     modalWrapper.addEventListener('click', function(e) {
-        // 只有点击背景时才关闭，点击图片本身不关闭
         if (e.target === modalWrapper) closeModalAction();
     });
 
-    // 键盘支持 (PC端)
     document.addEventListener('keydown', function(e) {
         if (!modal.classList.contains('show')) return;
         if (e.key === 'ArrowLeft') showPrev();
@@ -368,7 +370,6 @@
         if (e.key === 'Escape') closeModalAction();
     });
 
-    // 缩放功能 (按钮控制)
     function applyZoom(newZoom) {
         currentZoom = Math.min(Math.max(0.5, newZoom), 4);
         modalImg.style.transform = `scale(${currentZoom})`;
@@ -380,7 +381,6 @@
         applyZoom(e.deltaY < 0 ? currentZoom + 0.1 : currentZoom - 0.1);
     });
 
-    // ================= 新增：移动端触控事件 (滑动切换 & 双击放大) =================
     let touchStartX = 0;
     let touchEndX = 0;
     let lastTapTime = 0;
@@ -395,13 +395,11 @@
         const currentTime = new Date().getTime();
         const tapLength = currentTime - lastTapTime;
         
-        // 1. 双击判断 (两次点击间隔小于300ms)
         if (tapLength > 0 && tapLength < 300) {
             e.preventDefault();
-            if (currentZoom === 1) applyZoom(2); // 双击放大
-            else applyZoom(1);                   // 再次双击恢复
+            if (currentZoom === 1) applyZoom(2); 
+            else applyZoom(1); 
         } else {
-            // 2. 滑动判断 (只在未放大时允许左右滑动切换)
             if (currentZoom === 1 && e.changedTouches.length === 1) {
                 touchEndX = e.changedTouches[0].screenX;
                 handleSwipe();
@@ -411,12 +409,11 @@
     });
 
     function handleSwipe() {
-        const swipeThreshold = 40; // 滑动触发距离(px)
-        if (touchEndX < touchStartX - swipeThreshold) showNext(); // 左滑看下一张
-        if (touchEndX > touchStartX + swipeThreshold) showPrev(); // 右滑看上一张
+        const swipeThreshold = 40; 
+        if (touchEndX < touchStartX - swipeThreshold) showNext(); 
+        if (touchEndX > touchStartX + swipeThreshold) showPrev(); 
     }
 
-    // 下载原图功能
     document.getElementById('downloadBtn').addEventListener('click', async (e) => {
         e.stopPropagation();
         const url = currentImageArray[currentIndex];
