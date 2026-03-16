@@ -13,7 +13,7 @@
             font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif; 
             background-color: #fdfbf7; 
             color: #333; 
-            -webkit-tap-highlight-color: transparent; /* 去除移动端点击高亮 */
+            -webkit-tap-highlight-color: transparent; 
         }
 
         /* 顶部导航与上传区域 */
@@ -57,11 +57,27 @@
             left: 0; top: 0; opacity: 0; cursor: pointer; height: 100%;
         }
 
-        /* 瀑布流布局 */
+        /* ================= 日期分组标题样式 ================= */
+        .date-title {
+            font-size: 18px;
+            color: #ff8fa3;
+            margin: 30px 5% 15px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        .date-title::before {
+            content: '🌸';
+            margin-right: 8px;
+            font-size: 16px;
+        }
+        .date-section { margin-bottom: 20px; }
+
+        /* 瀑布流布局 (移入分组内) */
         .gallery {
             column-count: 3; 
             column-gap: 20px;
-            padding: 30px 5%;
+            padding: 0 5%;
         }
         .gallery-item {
             break-inside: avoid; 
@@ -115,7 +131,7 @@
             position: absolute; top: 20px; right: 25px;
             color: rgba(255,255,255,0.8); font-size: 35px; font-weight: bold;
             cursor: pointer; transition: color 0.3s; z-index: 1001;
-            padding: 10px; /* 增加移动端点击热区 */
+            padding: 10px; 
         }
         .close-btn:hover { color: #ff8fa3; }
 
@@ -154,19 +170,16 @@
         /* ================= 响应式设计 (重点适配手机端) ================= */
         @media (max-width: 900px) { .gallery { column-count: 2; } }
         @media (max-width: 600px) { 
-            .gallery { column-count: 1; padding: 20px 5%; }
+            .gallery { column-count: 1; padding: 0 5%; }
             header { padding: 12px 5%; }
             h1 { font-size: 18px; }
             .btn { padding: 8px 18px; font-size: 14px; }
-            
-            /* 手机端隐藏左右箭头，靠滑动切换 */
+            .date-title { font-size: 16px; margin: 20px 5% 10px; }
             .nav-btn { display: none; }
-            
-            /* 手机端调整底部工具栏，隐藏文字只留图标，防止换行 */
             .modal-toolbar { gap: 15px; padding: 10px 20px; bottom: 20px; width: max-content;}
-            .tb-text { display: none; } /* 隐藏文字说明 */
-            .toolbar-item { font-size: 20px; } /* 调大图标尺寸 */
-            .sym-icon { font-size: 22px; width: 22px; } /* 手机端适度放大加减号 */
+            .tb-text { display: none; } 
+            .toolbar-item { font-size: 20px; } 
+            .sym-icon { font-size: 22px; width: 22px; } 
             .img-counter { font-size: 14px; }
         }
     </style>
@@ -181,7 +194,7 @@
         </div>
     </header>
 
-    <main class="gallery" id="gallery"></main>
+    <main id="mainContainer"></main>
 
     <div class="modal" id="imageModal">
         <span class="close-btn" id="closeModal">&times;</span>
@@ -199,7 +212,7 @@
             <span class="toolbar-item" id="zoomInBtn"><span class="sym-icon">＋</span> <span class="tb-text">放大</span></span>
             <span class="toolbar-item" id="zoomOutBtn"><span class="sym-icon">－</span> <span class="tb-text">缩小</span></span>
             <div class="toolbar-divider"></div>
-            <span class="toolbar-item" id="downloadBtn">📥 <span class="tb-text">原图</span></span>
+            <span class="toolbar-item" id="downloadBtn">📥 <span class="tb-text">下载</span></span>
         </div>
     </div>
 
@@ -214,38 +227,119 @@
         token: '54b57d61c8bbd89012c5702a0123e177'  
     };
 
-    const gallery = document.getElementById('gallery');
+    const mainContainer = document.getElementById('mainContainer');
     const fileInput = document.getElementById('fileUpload');
     const uploadBtn = document.querySelector('.btn');
 
     // ==========================================
-    // 2. 加载与上传功能
+    // 时间处理辅助函数
+    // ==========================================
+    function formatDateStr(timestamp) {
+        const d = new Date(parseInt(timestamp));
+        if (isNaN(d.getTime())) return '早期回忆'; // 不是通过本系统上传的旧照片
+
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        if (d.toDateString() === today.toDateString()) return '今天 🌟';
+        if (d.toDateString() === yesterday.toDateString()) return '昨天';
+
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}年${month}月${day}日`;
+    }
+
+    // ==========================================
+    // 2. 加载与渲染 (支持日期分组)
     // ==========================================
     async function loadImagesFromGitee() {
-        gallery.innerHTML = '<p style="text-align:center; width:100%; color:#888; padding-top:20px;">正在加载宝宝相册...</p>';
+        mainContainer.innerHTML = '<p style="text-align:center; width:100%; color:#888; padding-top:40px;">正在整理宝宝的相册...</p>';
         const url = `https://gitee.com/api/v5/repos/${GITEE_CONFIG.owner}/${GITEE_CONFIG.repo}/contents/${GITEE_CONFIG.path}?access_token=${GITEE_CONFIG.token}`;
         
         try {
             const response = await fetch(url);
             if (!response.ok) {
-                if (response.status === 404) gallery.innerHTML = '<p style="text-align:center; width:100%; color:#888;">空空如也，快上传第一张照片吧！</p>';
+                if (response.status === 404) mainContainer.innerHTML = '<p style="text-align:center; width:100%; color:#888; padding-top:40px;">空空如也，快上传第一张照片吧！</p>';
                 else throw new Error('获取图片列表失败');
                 return;
             }
             const files = await response.json();
-            gallery.innerHTML = ''; 
             const imageFiles = files.filter(file => file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i));
+            
             if (imageFiles.length === 0) {
-                gallery.innerHTML = '<p style="text-align:center; width:100%; color:#888;">图床里还没有图片哦~</p>';
+                mainContainer.innerHTML = '<p style="text-align:center; width:100%; color:#888; padding-top:40px;">图床里还没有图片哦~</p>';
                 return;
             }
-            imageFiles.reverse().forEach(file => renderImageToGallery(file.download_url));
+
+            mainContainer.innerHTML = ''; // 清空提示
+
+            // 提取时间戳并排序 (倒序，最新在前)
+            imageFiles.forEach(file => {
+                const match = file.name.match(/^(\d{13})_/); // 解析文件名开头的13位时间戳
+                file.timestamp = match ? parseInt(match[1]) : 0;
+            });
+            imageFiles.sort((a, b) => b.timestamp - a.timestamp);
+
+            // 逐个渲染，智能分配到对应日期组
+            imageFiles.forEach(file => renderImageToGallery(file.download_url, file.name));
+
         } catch (error) {
             console.error(error);
-            gallery.innerHTML = '<p style="text-align:center; width:100%; color:red;">加载失败，请检查配置。</p>';
+            mainContainer.innerHTML = '<p style="text-align:center; width:100%; color:red; padding-top:40px;">加载失败，请检查配置。</p>';
         }
     }
 
+    // 将图片渲染到对应的日期分组中
+    function renderImageToGallery(imgUrl, fileName, isNew = false) {
+        const match = fileName.match(/^(\d{13})_/);
+        const dateStr = match ? formatDateStr(match[1]) : '早期回忆';
+        
+        // 查找是否已经有这个日期的区块
+        let section = document.querySelector(`section[data-group="${dateStr}"]`);
+        
+        // 如果没有，就创建一个新区块
+        if (!section) {
+            section = document.createElement('section');
+            section.className = 'date-section';
+            section.setAttribute('data-group', dateStr);
+            
+            const header = document.createElement('h2');
+            header.className = 'date-title';
+            header.innerText = dateStr;
+            section.appendChild(header);
+
+            const newGallery = document.createElement('div');
+            newGallery.className = 'gallery';
+            section.appendChild(newGallery);
+            
+            if (isNew) {
+                mainContainer.prepend(section); // 新上传的优先放在最上面
+            } else {
+                mainContainer.appendChild(section);
+            }
+        }
+        
+        // 插入图片
+        const gallery = section.querySelector('.gallery');
+        const newDiv = document.createElement('div');
+        newDiv.className = 'gallery-item';
+        const newImg = document.createElement('img');
+        newImg.src = imgUrl;
+        newImg.loading = "lazy"; 
+        newDiv.appendChild(newImg);
+        
+        if (isNew) {
+            gallery.prepend(newDiv);
+        } else {
+            gallery.appendChild(newDiv);
+        }
+    }
+
+    // ==========================================
+    // 3. 上传功能
+    // ==========================================
     fileInput.addEventListener('change', async function(e) {
         const files = e.target.files; 
         if (files.length === 0) return;
@@ -276,7 +370,7 @@
 
                 const result = await response.json();
                 if (response.ok) {
-                    renderImageToGallery(result.content.download_url, true);
+                    renderImageToGallery(result.content.download_url, newFileName, true);
                     successCount++;
                 } else failCount++;
             } catch (error) { failCount++; }
@@ -287,17 +381,6 @@
         if (failCount === 0) alert(`太棒了！${successCount} 张照片上传成功！`);
         else alert(`成功 ${successCount} 张，失败 ${failCount} 张。`);
     });
-
-    function renderImageToGallery(imgUrl, isNew = false) {
-        const newDiv = document.createElement('div');
-        newDiv.className = 'gallery-item';
-        const newImg = document.createElement('img');
-        newImg.src = imgUrl;
-        newImg.loading = "lazy"; // 开启原生懒加载，优化手机流量和内存
-        newDiv.appendChild(newImg);
-        if (isNew) gallery.prepend(newDiv);
-        else gallery.appendChild(newDiv);
-    }
 
     function getBase64(file) {
         return new Promise((resolve, reject) => {
@@ -311,7 +394,7 @@
     window.onload = loadImagesFromGitee;
 
     // ==========================================
-    // 3. 看图器逻辑
+    // 4. 看图器逻辑 (适配多分组的情况)
     // ==========================================
     const modal = document.getElementById('imageModal');
     const modalImg = document.getElementById('modalImage');
@@ -321,8 +404,10 @@
     let currentIndex = 0;
     let currentZoom = 1;
 
-    gallery.addEventListener('click', function(e) {
+    // 使用事件委托监听 mainContainer
+    mainContainer.addEventListener('click', function(e) {
         if (e.target.tagName === 'IMG') {
+            // 获取页面里所有图片 (按DOM顺序提取，正好符合分组顺序)
             const imgs = Array.from(document.querySelectorAll('.gallery-item img'));
             currentImageArray = imgs.map(img => img.src);
             currentIndex = imgs.indexOf(e.target);
