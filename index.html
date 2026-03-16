@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="referrer" content="no-referrer" />
     <title>❤️老婆大人专属空间❤️</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧸</text></svg>">
@@ -13,6 +13,7 @@
             font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif; 
             background-color: #fdfbf7; 
             color: #333; 
+            -webkit-tap-highlight-color: transparent; /* 去除移动端点击高亮 */
         }
 
         /* 顶部导航与上传区域 */
@@ -23,6 +24,7 @@
             padding: 15px 5%;
             background-color: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             box-shadow: 0 2px 15px rgba(0,0,0,0.05);
             position: sticky;
             top: 0;
@@ -52,11 +54,7 @@
         .upload-btn-wrapper input[type=file] {
             font-size: 100px;
             position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            cursor: pointer;
-            height: 100%;
+            left: 0; top: 0; opacity: 0; cursor: pointer; height: 100%;
         }
 
         /* 瀑布流布局 */
@@ -79,68 +77,51 @@
             box-shadow: 0 12px 25px rgba(0,0,0,0.12);
         }
         .gallery-item img {
-            width: 100%;
-            height: auto; 
-            display: block;
+            width: 100%; height: auto; display: block;
             transition: transform 0.5s ease;
         }
         .gallery-item:hover img { transform: scale(1.03); }
 
-        /* 响应式设计 */
-        @media (max-width: 900px) { .gallery { column-count: 2; } }
-        @media (max-width: 600px) { .gallery { column-count: 1; } }
-
         /* ================= 升级后的放大查看模态框 ================= */
         .modal {
-            display: flex;
-            position: fixed;
-            z-index: 999;
-            left: 0; top: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.9);
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
+            display: flex; position: fixed; z-index: 999;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.95);
+            align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
-            user-select: none; /* 防止选中文本 */
+            user-select: none;
         }
         .modal.show { opacity: 1; visibility: visible; }
         
         .modal-content-wrapper {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden; /* 隐藏缩放溢出部分 */
+            position: relative; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; 
         }
 
         .modal img {
-            max-width: 90%;
-            max-height: 85vh;
+            max-width: 95%; max-height: 85vh;
             border-radius: 8px;
             box-shadow: 0 5px 25px rgba(0,0,0,0.5);
             object-fit: contain; 
             transform: scale(0.8);
-            transition: transform 0.2s ease-out; /* 缩放过渡效果 */
-            cursor: grab;
+            transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
         }
         .modal.show img { transform: scale(1); }
 
         /* 关闭按钮 */
         .close-btn {
-            position: absolute; top: 20px; right: 30px;
-            color: white; font-size: 40px; font-weight: bold;
+            position: absolute; top: 20px; right: 25px;
+            color: rgba(255,255,255,0.8); font-size: 35px; font-weight: bold;
             cursor: pointer; transition: color 0.3s; z-index: 1001;
+            padding: 10px; /* 增加移动端点击热区 */
         }
         .close-btn:hover { color: #ff8fa3; }
 
         /* 左右导航箭头 */
         .nav-btn {
-            position: absolute; top: 50%;
-            transform: translateY(-50%);
+            position: absolute; top: 50%; transform: translateY(-50%);
             color: rgba(255,255,255,0.6); font-size: 50px;
             cursor: pointer; transition: 0.3s;
             padding: 20px; z-index: 1000;
@@ -154,23 +135,42 @@
             position: absolute; bottom: 30px; left: 50%;
             transform: translateX(-50%);
             display: flex; align-items: center; gap: 20px;
-            background: rgba(30, 30, 30, 0.7);
+            background: rgba(40, 40, 40, 0.85);
             padding: 12px 25px; border-radius: 30px;
             backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             color: white; font-size: 15px; z-index: 1001;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            white-space: nowrap;
         }
-        .toolbar-item { cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 5px; }
+        .toolbar-item { cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 6px; padding: 5px; }
         .toolbar-item:hover { color: #ff8fa3; }
-        .toolbar-divider { width: 1px; height: 15px; background: rgba(255,255,255,0.3); }
+        .toolbar-divider { width: 1px; height: 16px; background: rgba(255,255,255,0.3); }
         .img-counter { font-weight: bold; letter-spacing: 1px; }
 
+        /* ================= 响应式设计 (重点适配手机端) ================= */
+        @media (max-width: 900px) { .gallery { column-count: 2; } }
+        @media (max-width: 600px) { 
+            .gallery { column-count: 1; padding: 20px 5%; }
+            header { padding: 12px 5%; }
+            h1 { font-size: 18px; }
+            .btn { padding: 8px 18px; font-size: 14px; }
+            
+            /* 手机端隐藏左右箭头，靠滑动切换 */
+            .nav-btn { display: none; }
+            
+            /* 手机端调整底部工具栏，隐藏文字只留图标，防止换行 */
+            .modal-toolbar { gap: 15px; padding: 10px 20px; bottom: 20px; width: max-content;}
+            .tb-text { display: none; } /* 隐藏文字说明 */
+            .toolbar-item { font-size: 20px; } /* 调大图标尺寸 */
+            .img-counter { font-size: 14px; }
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>🧸 老婆大人专属空间</h1>
+        <h1>🧸 老婆专属空间</h1>
         <div class="upload-btn-wrapper">
             <button class="btn">上传新照片</button>
             <input type="file" id="fileUpload" accept="image/*" multiple />
@@ -192,10 +192,10 @@
         <div class="modal-toolbar">
             <span class="img-counter" id="imgCounter">1 / 1</span>
             <div class="toolbar-divider"></div>
-            <span class="toolbar-item" id="zoomInBtn">🔍 放大</span>
-            <span class="toolbar-item" id="zoomOutBtn">🔎 缩小</span>
+            <span class="toolbar-item" id="zoomInBtn">🔍 <span class="tb-text">放大</span></span>
+            <span class="toolbar-item" id="zoomOutBtn">🔎 <span class="tb-text">缩小</span></span>
             <div class="toolbar-divider"></div>
-            <span class="toolbar-item" id="downloadBtn">📥 下载原图</span>
+            <span class="toolbar-item" id="downloadBtn">📥 <span class="tb-text">原图</span></span>
         </div>
     </div>
 
@@ -215,38 +215,30 @@
     const uploadBtn = document.querySelector('.btn');
 
     // ==========================================
-    // 2. 页面加载与上传逻辑保持不变
+    // 2. 加载与上传功能 (保持原样)
     // ==========================================
     async function loadImagesFromGitee() {
-        gallery.innerHTML = '<p style="text-align:center; width:100%; color:#888;">正在加载宝宝相册...</p>';
+        gallery.innerHTML = '<p style="text-align:center; width:100%; color:#888; padding-top:20px;">正在加载宝宝相册...</p>';
         const url = `https://gitee.com/api/v5/repos/${GITEE_CONFIG.owner}/${GITEE_CONFIG.repo}/contents/${GITEE_CONFIG.path}?access_token=${GITEE_CONFIG.token}`;
         
         try {
             const response = await fetch(url);
             if (!response.ok) {
-                if (response.status === 404) {
-                    gallery.innerHTML = '<p style="text-align:center; width:100%; color:#888;">图床空空如也，快上传第一张照片吧！</p>';
-                } else {
-                    throw new Error('获取图片列表失败');
-                }
+                if (response.status === 404) gallery.innerHTML = '<p style="text-align:center; width:100%; color:#888;">空空如也，快上传第一张照片吧！</p>';
+                else throw new Error('获取图片列表失败');
                 return;
             }
-
             const files = await response.json();
             gallery.innerHTML = ''; 
-            
             const imageFiles = files.filter(file => file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i));
-            
             if (imageFiles.length === 0) {
                 gallery.innerHTML = '<p style="text-align:center; width:100%; color:#888;">图床里还没有图片哦~</p>';
                 return;
             }
-
             imageFiles.reverse().forEach(file => renderImageToGallery(file.download_url));
-
         } catch (error) {
             console.error(error);
-            gallery.innerHTML = '<p style="text-align:center; width:100%; color:red;">加载失败，请检查 Gitee 配置是否正确。</p>';
+            gallery.innerHTML = '<p style="text-align:center; width:100%; color:red;">加载失败，请检查配置。</p>';
         }
     }
 
@@ -256,19 +248,16 @@
 
         const originalText = uploadBtn.innerText;
         uploadBtn.style.pointerEvents = 'none'; 
-
-        let successCount = 0;
-        let failCount = 0;
+        let successCount = 0, failCount = 0;
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            uploadBtn.innerText = `正在飞往 Gitee... (${i + 1}/${files.length})`;
+            uploadBtn.innerText = `上传中... (${i + 1}/${files.length})`;
 
             try {
                 const base64Content = await getBase64(file);
                 const ext = file.name.substring(file.name.lastIndexOf("."));
                 const newFileName = new Date().getTime() + "_" + i + "_" + Math.floor(Math.random() * 1000) + ext;
-                
                 const uploadUrl = `https://gitee.com/api/v5/repos/${GITEE_CONFIG.owner}/${GITEE_CONFIG.repo}/contents/${GITEE_CONFIG.path}/${newFileName}`;
                 
                 const response = await fetch(uploadUrl, {
@@ -277,7 +266,7 @@
                     body: JSON.stringify({
                         access_token: GITEE_CONFIG.token,
                         content: base64Content,
-                        message: `Upload baby photo: ${newFileName}` 
+                        message: `Upload photo: ${newFileName}` 
                     })
                 });
 
@@ -285,18 +274,14 @@
                 if (response.ok) {
                     renderImageToGallery(result.content.download_url, true);
                     successCount++;
-                } else {
-                    failCount++;
-                }
+                } else failCount++;
             } catch (error) { failCount++; }
         } 
-
         uploadBtn.innerText = originalText;
         uploadBtn.style.pointerEvents = 'auto';
         e.target.value = ''; 
-
-        if (failCount === 0) alert(`太棒了！${successCount} 张照片全部成功飞抵宝宝的专属空间！`);
-        else alert(`上传完成：成功 ${successCount} 张，失败 ${failCount} 张。`);
+        if (failCount === 0) alert(`太棒了！${successCount} 张照片上传成功！`);
+        else alert(`成功 ${successCount} 张，失败 ${failCount} 张。`);
     });
 
     function renderImageToGallery(imgUrl, isNew = false) {
@@ -304,9 +289,8 @@
         newDiv.className = 'gallery-item';
         const newImg = document.createElement('img');
         newImg.src = imgUrl;
-        newImg.alt = "宝宝照片";
+        newImg.loading = "lazy"; // 开启原生懒加载，优化手机流量和内存
         newDiv.appendChild(newImg);
-        
         if (isNew) gallery.prepend(newDiv);
         else gallery.appendChild(newDiv);
     }
@@ -323,7 +307,7 @@
     window.onload = loadImagesFromGitee;
 
     // ==========================================
-    // 3. 全新的看图器逻辑 (图片组、切换、缩放、下载)
+    // 3. 看图器逻辑 (新增手机端手势、双击缩放)
     // ==========================================
     const modal = document.getElementById('imageModal');
     const modalImg = document.getElementById('modalImage');
@@ -333,31 +317,23 @@
     let currentIndex = 0;
     let currentZoom = 1;
 
-    // 打开图片
     gallery.addEventListener('click', function(e) {
         if (e.target.tagName === 'IMG') {
-            // 获取当前相册里所有的图片节点
             const imgs = Array.from(document.querySelectorAll('.gallery-item img'));
             currentImageArray = imgs.map(img => img.src);
             currentIndex = imgs.indexOf(e.target);
-            
             updateModalView();
             modal.classList.add('show');
         }
     });
 
-    // 更新模态框内容和状态
     function updateModalView() {
-        // 重置缩放
         currentZoom = 1;
         modalImg.style.transform = `scale(${currentZoom})`;
-        // 设置图片
         modalImg.src = currentImageArray[currentIndex];
-        // 更新计数器
         document.getElementById('imgCounter').innerText = `${currentIndex + 1} / ${currentImageArray.length}`;
     }
 
-    // 切换上一张/下一张
     function showPrev() {
         if(currentImageArray.length === 0) return;
         currentIndex = (currentIndex - 1 + currentImageArray.length) % currentImageArray.length;
@@ -373,19 +349,18 @@
     document.getElementById('prevBtn').addEventListener('click', (e) => { e.stopPropagation(); showPrev(); });
     document.getElementById('nextBtn').addEventListener('click', (e) => { e.stopPropagation(); showNext(); });
 
-    // 关闭模态框
     function closeModalAction() {
         modal.classList.remove('show');
-        setTimeout(() => { modalImg.src = ''; }, 300); // 延迟清空避免闪烁
+        setTimeout(() => { modalImg.src = ''; }, 300); 
     }
     
     document.getElementById('closeModal').addEventListener('click', closeModalAction);
     modalWrapper.addEventListener('click', function(e) {
-        // 点击图片以外的空白区域关闭
+        // 只有点击背景时才关闭，点击图片本身不关闭
         if (e.target === modalWrapper) closeModalAction();
     });
 
-    // 键盘支持 (左右切换，ESC关闭)
+    // 键盘支持 (PC端)
     document.addEventListener('keydown', function(e) {
         if (!modal.classList.contains('show')) return;
         if (e.key === 'ArrowLeft') showPrev();
@@ -393,36 +368,61 @@
         if (e.key === 'Escape') closeModalAction();
     });
 
-    // 缩放功能 (滚轮)
-    modalImg.addEventListener('wheel', function(e) {
-        e.preventDefault();
-        if (e.deltaY < 0) currentZoom += 0.1; // 向上滚放大
-        else currentZoom -= 0.1; // 向下滚缩小
-        
-        currentZoom = Math.min(Math.max(0.5, currentZoom), 4); // 限制缩放比例 (0.5倍 - 4倍)
+    // 缩放功能 (按钮控制)
+    function applyZoom(newZoom) {
+        currentZoom = Math.min(Math.max(0.5, newZoom), 4);
         modalImg.style.transform = `scale(${currentZoom})`;
+    }
+    document.getElementById('zoomInBtn').addEventListener('click', (e) => { e.stopPropagation(); applyZoom(currentZoom + 0.3); });
+    document.getElementById('zoomOutBtn').addEventListener('click', (e) => { e.stopPropagation(); applyZoom(currentZoom - 0.3); });
+    modalImg.addEventListener('wheel', e => {
+        e.preventDefault();
+        applyZoom(e.deltaY < 0 ? currentZoom + 0.1 : currentZoom - 0.1);
     });
 
-    // 缩放功能 (按钮)
-    document.getElementById('zoomInBtn').addEventListener('click', (e) => {
-        e.stopPropagation();
-        currentZoom = Math.min(currentZoom + 0.2, 4);
-        modalImg.style.transform = `scale(${currentZoom})`;
+    // ================= 新增：移动端触控事件 (滑动切换 & 双击放大) =================
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let lastTapTime = 0;
+
+    modalImg.addEventListener('touchstart', e => {
+        if (e.touches.length === 1) {
+            touchStartX = e.changedTouches[0].screenX;
+        }
     });
-    
-    document.getElementById('zoomOutBtn').addEventListener('click', (e) => {
-        e.stopPropagation();
-        currentZoom = Math.max(currentZoom - 0.2, 0.5);
-        modalImg.style.transform = `scale(${currentZoom})`;
+
+    modalImg.addEventListener('touchend', e => {
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTapTime;
+        
+        // 1. 双击判断 (两次点击间隔小于300ms)
+        if (tapLength > 0 && tapLength < 300) {
+            e.preventDefault();
+            if (currentZoom === 1) applyZoom(2); // 双击放大
+            else applyZoom(1);                   // 再次双击恢复
+        } else {
+            // 2. 滑动判断 (只在未放大时允许左右滑动切换)
+            if (currentZoom === 1 && e.changedTouches.length === 1) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }
+        }
+        lastTapTime = currentTime;
     });
+
+    function handleSwipe() {
+        const swipeThreshold = 40; // 滑动触发距离(px)
+        if (touchEndX < touchStartX - swipeThreshold) showNext(); // 左滑看下一张
+        if (touchEndX > touchStartX + swipeThreshold) showPrev(); // 右滑看上一张
+    }
 
     // 下载原图功能
     document.getElementById('downloadBtn').addEventListener('click', async (e) => {
         e.stopPropagation();
         const url = currentImageArray[currentIndex];
-        const btn = document.getElementById('downloadBtn');
-        const originalText = btn.innerText;
-        btn.innerText = "⏳ 正在打包...";
+        const btnTextSpan = document.querySelector('#downloadBtn .tb-text');
+        const originalText = btnTextSpan ? btnTextSpan.innerText : '';
+        if(btnTextSpan) btnTextSpan.innerText = "打包中";
         
         try {
             const response = await fetch(url);
@@ -430,17 +430,15 @@
             const blobUrl = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = blobUrl;
-            // 获取URL最后的文件名作为下载文件名
             a.download = url.substring(url.lastIndexOf('/') + 1) || 'baby_photo.jpg';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             window.URL.revokeObjectURL(blobUrl);
         } catch (error) {
-            console.error('下载失败，尝试新标签页打开:', error);
-            window.open(url, '_blank'); // 跨域限制时的降级方案
+            window.open(url, '_blank'); 
         } finally {
-            btn.innerText = originalText;
+            if(btnTextSpan) btnTextSpan.innerText = originalText;
         }
     });
 
